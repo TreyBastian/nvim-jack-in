@@ -50,23 +50,36 @@ lein_plugins = {
 ```
 
 #### `location`
-Location where the repl should open 
+Location where the REPL should open 
 ##### Default
 ```lua
 location = 'buffer' 
 ```
 ##### Choices
-`buffer` - opens repl in a new buffer with focus
-`background` - opens repl in a new buffer but you stay focused on current buffer
-`split` - opens repl in new split
-`vsplit` - opens repl in new vertical split
-`tab` - opens repl in new tab
+`buffer` - opens REPL in a new buffer with focus
+`background` - opens REPL in a new buffer but you stay focused on current buffer
+`split` - opens REPL in new split
+`vsplit` - opens REPL in new vertical split
+`tab` - opens REPL in new tab
 
 #### `force_powershell`
-Force the useage of powershell. In windows setting `vim.o.shell = powershell` might sometimes not be optimal. Clj by default on windows is installed as a powershell module. This forces the plugin to use powershell.;
+Force the usage of powershell. In windows setting `vim.o.shell = powershell` might sometimes not be optimal. Clj by default on windows is installed as a powershell module. This forces the plugin to use powershell.
 ##### Default
 ```lua
-force_powershell = false,
+force_powershell = false
 ```
 
 ## Usage
+This plugin automatically registers 2 commands `:Clj`and `:Lein` to start their respective REPLs
+
+You can easily map these commands to a key.
+```lua
+vim.keymap.set("n", "<leader>rc", "<CMD>:Clj<CR>")
+vim.keymap.net("n", "<leader>rl", "<CMD>:Lein<CR>")
+```
+
+## Contributing
+This project is open source, not just public source. If you wish to contribute start with an issue.
+
+## Socials
+I developed this project live on [Twitch](https://twitch.tv/Trey_Bastian). I'd appreciate any follows. You can also find me on [X - formerly Twitter](https://x.com/TreyBastian)
