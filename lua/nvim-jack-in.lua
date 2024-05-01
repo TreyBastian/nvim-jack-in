@@ -19,12 +19,15 @@ M.config = {
   force_powershell = false,
 }
 
-local is_powershell = vim.o.shell == 'powershell.exe' or vim.o.shell == 'pwsh' or vim.o.shell == 'powershell' or
-    vim.o.shell == 'pwsh.exe' or M.config.force_powershell == true
+local function is_powershell()
+  return vim.o.shell == 'powershell.exe' or vim.o.shell == 'pwsh' or vim.o.shell == 'powershell' or
+      vim.o.shell == 'pwsh.exe' or M.config.force_powershell == true
+end
+
 
 -- windows needs to add quotes for powershell because well powershell...
 local function version_escape(version)
-  if is_powershell == true then
+  if is_powershell() == true then
     return '""""""' .. version .. '""""""'
   end
   return '"' .. version .. '"'
@@ -46,10 +49,12 @@ local function map_clj_middleware_to_string()
   return string
 end
 
-local clj_string = "clj -Sdeps " ..
-    "'{:deps {" ..
-    map_clj_deps_to_string() ..
-    "}}' " .. "-M -m nrepl.cmdline --middleware '[" .. map_clj_middleware_to_string() .. "]' --interactive"
+local function clj_string()
+  return "clj -Sdeps " ..
+      "'{:deps {" ..
+      map_clj_deps_to_string() ..
+      "}}' " .. "-M -m nrepl.cmdline --middleware '[" .. map_clj_middleware_to_string() .. "]' --interactive"
+end
 
 local function map_lein_plugins_to_string()
   local string = ''
@@ -59,7 +64,9 @@ local function map_lein_plugins_to_string()
   return string
 end
 
-local lein_string = "lein update-in :plugins conj '[" .. map_lein_plugins_to_string() .. "]' -- repl"
+local function lein_string()
+  return "lein update-in :plugins conj '[" .. map_lein_plugins_to_string() .. "]' -- repl"
+end
 
 local function jack_in(execution_string)
   if M.config.location == "vsplit" then
@@ -75,7 +82,7 @@ local function jack_in(execution_string)
   else
     vim.cmd(':term ' .. execution_string)
   end
-  if options.location == 'background' then
+  if M.config.location == 'background' then
     -- swap to the previous buffer if available
     vim.cmd('bp')
   end
@@ -85,17 +92,16 @@ function M.setup(user_opts)
   M.config = vim.tbl_extend("force", M.config, user_opts or {})
 
 
-
   vim.api.nvim_create_user_command(
     'Clj', function()
-      jack_in(clj_string)
+      jack_in(clj_string())
     end,
     {}
   )
 
   vim.api.nvim_create_user_command(
     'Lein', function()
-      jack_in(lein_string)
+      jack_in(lein_string())
     end,
     {}
   )
