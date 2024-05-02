@@ -68,7 +68,7 @@ local function lein_string()
   return "lein update-in :plugins conj '[" .. map_lein_plugins_to_string() .. "]' -- repl"
 end
 
-local function jack_in(execution_string)
+local function jack_in(execution_string, args)
   if M.config.location == "vsplit" then
     vim.cmd('vsplit')
   elseif M.config.location == "split" then
@@ -78,9 +78,9 @@ local function jack_in(execution_string)
   end
 
   if M.config.force_powershell == true then
-    vim.cmd(':term powershell ' .. execution_string)
+    vim.cmd(':term powershell ' .. execution_string .. " " .. args)
   else
-    vim.cmd(':term ' .. execution_string)
+    vim.cmd(':term ' .. execution_string .. " " .. args)
   end
   if M.config.location == 'background' then
     -- swap to the previous buffer if available
@@ -93,17 +93,17 @@ function M.setup(user_opts)
 
 
   vim.api.nvim_create_user_command(
-    'Clj', function()
-      jack_in(clj_string())
+    'Clj', function(args)
+      jack_in(clj_string(), args)
     end,
-    {}
+    { nargs = "*" }
   )
 
   vim.api.nvim_create_user_command(
-    'Lein', function()
-      jack_in(lein_string())
+    'Lein', function(args)
+      jack_in(lein_string(), args)
     end,
-    {}
+    { nargs = "*" }
   )
 end
 
