@@ -104,7 +104,7 @@ vim.keymap.net("n", "<leader>rl", "<CMD>:Lein<CR>")
 ```
 
 You can supply additional arguments to the command. For example to use [Kit-Clj](https://kit-clj.github.io) development mode you can do.
-`:Lein -A:dev`
+`:Clj -A:dev`
 
 ## Contributing
 
