@@ -49,11 +49,15 @@ local function map_clj_middleware_to_string()
   return string
 end
 
-local function clj_string()
-  return "clj -Sdeps " ..
-      "'{:deps {" ..
-      map_clj_deps_to_string() ..
-      "}}' " .. "-M -m nrepl.cmdline --middleware '[" .. map_clj_middleware_to_string() .. "]' --interactive"
+local function clj_string(args)
+  if args == nil then args = '' end
+
+  local cmd = "clj"
+  local deps = "'{:deps {" .. map_clj_deps_to_string() .. "}}' "
+  local cider = "-M -m nrepl.cmdline --interactive --middleware '[" ..
+      map_clj_middleware_to_string() .. "]'"
+
+  return cmd .. " -Sdeps " .. deps .. args .. " " .. cider
 end
 
 local function map_lein_plugins_to_string()
@@ -64,8 +68,10 @@ local function map_lein_plugins_to_string()
   return string
 end
 
-local function lein_string()
-  return "lein update-in :plugins conj '[" .. map_lein_plugins_to_string() .. "]' -- repl"
+local function lein_string(args)
+  if args == nil then args = '' end
+
+  return "lein update-in :plugins conj '[" .. map_lein_plugins_to_string() .. "]' -- repl" .. args
 end
 
 local function jack_in(execution_string)
@@ -93,18 +99,19 @@ function M.setup(user_opts)
 
 
   vim.api.nvim_create_user_command(
-    'Clj', function()
-      jack_in(clj_string())
+    'Clj', function(opts)
+      jack_in(clj_string(opts.args))
     end,
-    {}
+    { nargs = "*" }
   )
 
   vim.api.nvim_create_user_command(
-    'Lein', function()
-      jack_in(lein_string())
+    'Lein', function(opts)
+      jack_in(lein_string(opts.args))
     end,
-    {}
+    { nargs = "*" }
   )
 end
 
 return M
+
