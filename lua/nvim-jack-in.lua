@@ -78,9 +78,9 @@ local function jack_in(execution_string, args)
   end
 
   if M.config.force_powershell == true then
-    vim.cmd(':term powershell ' .. execution_string .. " " .. args)
+    vim.cmd({ ':term powershell ' .. execution_string, args })
   else
-    vim.cmd(':term ' .. execution_string .. " " .. args)
+    vim.cmd({ ':term ' .. execution_string .. " ", args })
   end
   if M.config.location == 'background' then
     -- swap to the previous buffer if available
