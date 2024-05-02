@@ -78,9 +78,9 @@ local function jack_in(execution_string, args)
   end
 
   if M.config.force_powershell == true then
-    vim.cmd({ ':term powershell ' .. execution_string, args })
+    vim.cmd(':term powershell ' .. execution_string .. " " .. args)
   else
-    vim.cmd({ ':term ' .. execution_string .. " ", args })
+    vim.cmd(':term ' .. execution_string .. " " .. args)
   end
   if M.config.location == 'background' then
     -- swap to the previous buffer if available
@@ -93,15 +93,15 @@ function M.setup(user_opts)
 
 
   vim.api.nvim_create_user_command(
-    'Clj', function(args)
-      jack_in(clj_string(), args)
+    'Clj', function(opts)
+      jack_in(clj_string(), opts.args)
     end,
     { nargs = "*" }
   )
 
   vim.api.nvim_create_user_command(
-    'Lein', function(args)
-      jack_in(lein_string(), args)
+    'Lein', function(opts)
+      jack_in(lein_string(), opts.args)
     end,
     { nargs = "*" }
   )
